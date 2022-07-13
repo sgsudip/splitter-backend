@@ -1,0 +1,25 @@
+{
+  "name": "excel-splitter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.5.9",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "multer": "^1.4.4",
+    "nodemon": "^2.0.18",
+    "uuid": "^8.3.2"
+  },
+  "engines": {
+    "node": "14.7.2",
+    "npm": "7.19.0"
+  }
+}
