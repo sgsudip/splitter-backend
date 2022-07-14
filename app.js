@@ -5,10 +5,11 @@ const multer = require("multer");
 const fs = require("fs");
 const uuid = require("uuid");
 const AdmZip = require("adm-zip");
-const { on } = require("events");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+console.log(process.platform);
 
 const handler = multer({
   storage: multer.memoryStorage(),
@@ -25,7 +26,7 @@ app.use(express.json());
 app.use(cors());
 
 const pythonExecCommand =
-  process.platform.includes("win") == true ? "python" : "python3";
+  process.platform.startsWith("win") == true ? "python" : "python3";
 
 //   root route, used to check server status
 app.get("/", async (req, res) => {
@@ -51,12 +52,13 @@ app.post("/split-files", handler.single("file"), async (req, res) => {
     const path = `/tmp/${uuid.v4()}_${fileDetails.originalname}`;
     // console.log(path);
     fs.writeFileSync(__dirname + path, fileDetails.buffer);
-    const pythonProcess = child_process.spawn("python", [
+    const pythonProcess = child_process.spawn(pythonExecCommand, [
       `${__dirname + "/splitter.py"}`,
       path,
       fileDetails.originalname,
       nFiles,
     ]);
+
     // console.log(pythonProcess.stdout);
 
     pythonProcess.stdout.on("data", (data) => {
@@ -69,14 +71,18 @@ app.post("/split-files", handler.single("file"), async (req, res) => {
       let zippedFiles = new AdmZip();
       for (const filePath of outputFiles) {
         zippedFiles.addLocalFile(__dirname + filePath);
-        fs.unlink(__dirname + filePath, (err) => {
-          if (err) {
-            throw err;
-          }
-          console.log("File is deleted");
-        });
-        console.log("file content");
-        console.log(__dirname + filePath);
+        // fs.unlink(__dirname + filePath, (err) => {
+        //   if (err) {
+        //     throw err;
+        //   }
+        //   console.log("File is deleted");
+        // });
+        // const reader = fs.createReadStream(__dirname + filePath);
+
+        // reader.on("data", (chunk) => {
+        //   console.log("chunk");
+        //   console.log(chunk.toString());
+        // });
       }
       const bufferToSend = zippedFiles.toBuffer();
       const base64FromBuffer = bufferToSend.toString("base64");

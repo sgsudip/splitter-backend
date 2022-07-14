@@ -59,7 +59,7 @@ else:
     remainder = int(rowlength%divisions)
     lv1array=[]
   
-    print(rowlength)
+    # print(rowlength)
     count=0    
     while count <= rowlength:
         lv1array.append(count)
@@ -80,7 +80,7 @@ else:
   
     count = 1
     for data in split_data:
-      sys.stdout.flush()
+    #   sys.stdout.flush()
       relative_path = '/tmp/' + str(uuid.uuid4()) + file_name.split('.')[0] + '_' + str(count) + '.' + file_name.split('.')[1]
       path = os.getcwd() + relative_path
       f = open(path, 'w')
